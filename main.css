@@ -6,6 +6,7 @@
     font-family: 'Permanent Marker', cursive;
     font-size: calc(0.5em + 1vw);
     list-style-type: none;
+    user-select: none;
 }
 :root{
     --mint:#37E2D5;
@@ -291,24 +292,31 @@
         align-content: center;
         grid-row-gap: 10px;
         grid-column-gap: 15px;
-        grid-template-rows: repeat(4,minmax(100px,100px));
-        grid-template-columns: repeat(5,minmax(50px,100px));
     }
     .main-cards-four{
         grid-template-columns: repeat(5,minmax(50px,100px));
-        grid-template-rows: repeat(4,minmax(100px,100px));
+        grid-template-rows: repeat(4,1fr);
     }
     .main-cards-six{
         grid-template-columns: repeat(6,minmax(50px,100px));
-        grid-template-rows: repeat(5,minmax(100px,100px));
+        grid-template-rows: repeat(5,1fr);
     }
     .main-cards-eight{
         grid-template-columns: repeat(8,minmax(50px,100px));
-        grid-template-rows: repeat(5,minmax(100px,100px));
+        grid-template-rows: repeat(5,1fr);
     }
     @media (max-width:768px){
         .main-cards{
             grid-template-columns: repeat(5,minmax(50px,100px));
+        }
+        .main-cards-four{
+            grid-template-rows: repeat(4,1fr);
+        }
+        .main-cards-six{
+            grid-template-rows: repeat(6,1fr);
+        }
+        .main-cards-eight{
+            grid-template-rows: repeat(8,1fr);
         }
     }
     .card{
@@ -338,13 +346,16 @@
         background-color: white;
         transform: rotateY(180deg);
     }
-    .card:hover{
+    .card-active{
         transform:translateX(-100%) rotateY(180deg);
     }
     .back-card img ,.face-card img{
         display: block;
         height: auto;
         width: 90%;
+    }
+    .face-card img{
+        width: 70%;
     }
     .counter-parent,.pause-screen{
         width: 100%;

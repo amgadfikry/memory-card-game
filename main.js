@@ -178,13 +178,48 @@ const cardContainer = document.querySelector(".main-cards");
 //add cards accord to level difficulties
 levelStartBtn.forEach(el=>{
     el.addEventListener("click",(e)=>{
-        let imgArr = formRandomArray(e.target.dataset.level/2)
-        makeCards(e.target.dataset.level)
+        removeChildren()
+        gridSystem(el.dataset.level);
+        let imgArr = formRandomArray(el.dataset.level);
+        makeCards(el.dataset.level);
+        addRandomImg(imgArr);
     })
 })
 
+//function to add random photo to cards
+function addRandomImg (arr){
+    let path = "./assets/"
+    let extension = ".png"
+    for(let i = 0 ; i < arr.length ; i++){
+        let fullPath = `${path}${arr[i]}${extension}`
+        cardContainer.children[i+2].children[1].children[0].setAttribute("src",fullPath);
+        cardContainer.children[i+2].dataset.value= arr[i]
+    }
+}
+//function remove all prevous children
+function removeChildren(){
+    while (cardContainer.children.length >2) {
+        cardContainer.removeChild(cardContainer.lastChild)
+    }
+}
+//function to determine grid system
+function gridSystem(num){
+    if(num == 20){
+        cardContainer.classList.remove("main-cards-six","main-cards-eight")
+        cardContainer.classList.add("main-cards-four")
+    }
+    else if (num == 30){
+        cardContainer.classList.remove("main-cards-four","main-cards-eight")
+        cardContainer.classList.add("main-cards-six")
+    }
+    else if(num == 40){
+        cardContainer.classList.remove("main-cards-four","main-cards-six")
+        cardContainer.classList.add("main-cards-eight")
+    }
+}
 //function to make card elements
 function makeCards(num){
+    let arr = [];
     for(let i = 0 ; i< num;i++){
         let card = document.createElement("div");
         card.classList.add("card");
@@ -193,17 +228,18 @@ function makeCards(num){
         let backCard = document.createElement("div");
         backCard.classList.add("back-card");
         let imgFaceCard = document.createElement("img");
-        imgFaceCard.setAttribute("src","./assets/");
+        imgFaceCard.setAttribute("src","./assets/question-mark.png");
         let imgBackCard = document.createElement("img");
         faceCard.appendChild(imgFaceCard);
         backCard.appendChild(imgBackCard);
         card.appendChild(faceCard);
         card.appendChild(backCard);
-        cardContainer.appendChild(card);
+        arr.push(card)
     }
+    arr.forEach(el=>{
+        cardContainer.appendChild(el)
+    })
 }
-
-
 //make array from random number function
 function formRandomArray(numberInArray){
     let photosArr = [];
@@ -211,12 +247,20 @@ function formRandomArray(numberInArray){
         let randomNum = Math.ceil(Math.random()*39)
         if(!photosArr.includes(randomNum)){
             photosArr.push(randomNum)
+            photosArr.push(randomNum)
         }
         else{}
     }
-    return photosArr
+    let arrLenght = photosArr.length;
+    let currentindex;
+    let finalArr=[]
+    while(arrLenght > 0){
+        currentindex = Math.floor(Math.random()*arrLenght)
+        arrLenght--
+        finalArr.push(photosArr[currentindex])
+        photosArr.splice(currentindex,1)
+    }
+    return finalArr
 }
-
-
-
-
+//**************************************************************
+//add event to cards and sounds + auto flib cards at first
