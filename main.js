@@ -7,6 +7,7 @@ copyright.textContent = `Copyright © ${year} Amgad Fikry Mohamed`;
 const menuSound = document.querySelector(".menu-audio");
 const openSound = new Audio("./sound/cinderblockmove-91891.mp3");
 const countSound = new Audio("./sound/mixkit-melodic-race-countdown-1955.wav");
+const cardSound = new Audio("./sound/page-turn-100277.mp3")
 //******************************************************************************
 //variables for open gate for game and close gate for game
 const exitGate = document.querySelector(".exit-gate");
@@ -175,7 +176,10 @@ resumeBtn.addEventListener("click",()=>{
 //****************************************************************************
 const levelStartBtn = document.querySelectorAll(".level-btn");
 const cardContainer = document.querySelector(".main-cards");
+let resultArr =[];
+
 //add cards accord to level difficulties
+
 levelStartBtn.forEach(el=>{
     el.addEventListener("click",(e)=>{
         removeChildren()
@@ -183,6 +187,11 @@ levelStartBtn.forEach(el=>{
         let imgArr = formRandomArray(el.dataset.level);
         makeCards(el.dataset.level);
         addRandomImg(imgArr);
+
+        const card =document.querySelectorAll(".card")
+        card.forEach(el=>{
+            resultArr.push(el)
+        })
     })
 })
 
@@ -262,5 +271,10 @@ function formRandomArray(numberInArray){
     }
     return finalArr
 }
+//function add active card and sound of flip
+function activeCard(){
+    this.classList.add("card-active");
+    cardSound.play()
+}
 //**************************************************************
-//add event to cards and sounds + auto flib cards at first
+
