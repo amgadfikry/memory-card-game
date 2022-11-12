@@ -176,7 +176,7 @@ resumeBtn.addEventListener("click",()=>{
 //****************************************************************************
 const levelStartBtn = document.querySelectorAll(".level-btn");
 const cardContainer = document.querySelector(".main-cards");
-let resultArr =[];
+let card =[];
 
 //add cards accord to level difficulties
 
@@ -188,10 +188,11 @@ levelStartBtn.forEach(el=>{
         makeCards(el.dataset.level);
         addRandomImg(imgArr);
 
-        const card =document.querySelectorAll(".card")
-        card.forEach(el=>{
-            resultArr.push(el)
+        const cardClass =document.querySelectorAll(".card")
+        cardClass.forEach(el=>{
+            card.push(el)
         })
+        activeCard()
     })
 })
 
@@ -202,7 +203,7 @@ function addRandomImg (arr){
     for(let i = 0 ; i < arr.length ; i++){
         let fullPath = `${path}${arr[i]}${extension}`
         cardContainer.children[i+2].children[1].children[0].setAttribute("src",fullPath);
-        cardContainer.children[i+2].dataset.value= arr[i]
+        cardContainer.children[i+2].setAttribute(`data-${arr[i]}`, arr[i])
     }
 }
 //function remove all prevous children
@@ -271,10 +272,24 @@ function formRandomArray(numberInArray){
     }
     return finalArr
 }
-//function add active card and sound of flip
-function activeCard(){
-    this.classList.add("card-active");
-    cardSound.play()
-}
 //**************************************************************
+//add event to cards and sounds + auto flib cards at first
 
+
+//function add active card and sound of flip
+let result = [];
+function activeCard(){
+    card.forEach(el=>{
+        flipCard(el)
+
+    })
+}
+
+function flipCard(el){
+    el.addEventListener("click",()=>{
+        el.classList.add("card-active");
+        cardSound.play()
+        result.push(el)
+        console.log(result)
+    })
+}

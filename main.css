@@ -349,6 +349,9 @@
     .card-active{
         transform:translateX(-100%) rotateY(180deg);
     }
+    #active{
+        transform:translateX(-100%) rotateY(180deg);
+    }
     .back-card img ,.face-card img{
         display: block;
         height: auto;
