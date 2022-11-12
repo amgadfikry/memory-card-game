@@ -16,7 +16,7 @@
         <div class="exit-gate">
             <div class="left-gate"></div>
             <div class="right-gate"></div>
-            <p>Good Bye<br>See You Soon</p>
+            <p class="para-animation">Press Any Key</p>
         </div>
         <!--end exit gate-->
         <div class="container">
@@ -33,9 +33,10 @@
                     <div class=" btn">
                         <button class="btn-start">Start</button>
                         <ul class="level">
-                            <li class="level-li easy">Easy <span>5X5</span></li>
-                            <li class="level-li Medium">Medium <span>7X7</span></li>
-                            <li class="level-li Hard">Hard <span>10X10</span></li>
+                            <li class="level-li continue">Continue</li>
+                            <li class="level-li level-btn easy" data-level="20">Easy <span>5X4</span></li>
+                            <li class="level-li level-btn Medium" data-level="30" >Medium <span>5X6</span></li>
+                            <li class="level-li level-btn Hard" data-level="40">Hard <span>5X8</span></li>
                         </ul>
                     </div>
                     <div class=" btn">
@@ -53,12 +54,16 @@
             <!--start main part game-->
             <div class="main">
                 <div class="main-btns">
-                    <button class="main-btn btn-pause">Pause</button>
+                    <button class="main-btn btn-pause disabled" data-name="Pause" disabled="true">Pause</button>
                     <div class="show-level"></div>
-                    <button class="main-btn btn-back">Back to Menu</button>
+                    <button class="main-btn btn-back disabled" disabled="true">Back to Menu</button>
                 </div>
                 <div class="main-cards">
-                    
+                    <div class="counter-parent"><span class="counter"></span></div>
+                    <div class="pause-screen">
+                        <button class="pause-screen-btns btn-resume">Resume</button>
+                        <button class="pause-screen-btns btn-back">Back to Menu</button>
+                    </div>
                 </div>
                 <div class="main-data">
                     <div class="time data">Time : <span>00:00</span></div>
@@ -68,6 +73,8 @@
             <!--end main part game-->
         </div>
     </div>
+    <input type="file" value="./assets/alpaca.png" src="./assets/alpaca.png" multiple id="amgad" style="display: none;">
+    <audio src="./sound/drum.mp3" class="menu-audio" loop style="display:none;" ></audio>
     <script src="./main.js"></script>
 </body>
 </html>
