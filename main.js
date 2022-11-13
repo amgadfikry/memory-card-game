@@ -32,14 +32,13 @@ function open(){
         paragraph.classList.remove("para-animation");
         menuSound.play();
     },2300);
-}
-const handler = ["click","keypress"];
-handler.forEach(el=>{
-    window.addEventListener(el,open);
     setTimeout(()=>{
-        window.removeEventListener(el,open);
+        window.removeEventListener("click",open);
     },2000);
-});
+}
+
+    window.addEventListener("click",open);
+
 
 //click on exit btn and close gate and game
 exitBtn.addEventListener("click",()=>{
@@ -90,7 +89,27 @@ const wholeMenu = document.querySelector(".menu")
 const upperPart = document.querySelector(".upper-part")
 const lowerPart = document.querySelector(".lower-part")
 const countDisplay = document.querySelector(".counter")
+const timerDisplay = document.querySelector(".time span")
+let sec = 0;
+let min = 0;
 //function to count down
+function timer(){
+    sec++
+    if(sec==60){
+        sec=0
+        min++
+    }
+    else{
+        if(sec <10){
+            timerDisplay.textContent=`${min}:0${sec}`
+        }
+        else{
+            timerDisplay.textContent=`${min}:${sec}`
+        }
+    }
+}
+let timerStart;
+
 function startCount(){
     let count = 3;
     countSound.play();
@@ -104,6 +123,7 @@ function startCount(){
             backToMenuBtn[0].classList.remove("disabled");
             backToMenuBtn[0].removeAttribute("disabled")
             clearInterval(countEverySecond)
+            timerStart = setInterval(timer,1000)
         }
         else if(count==0){
             countDisplay.textContent = "Go";
@@ -131,6 +151,7 @@ levelsBtn.forEach(el=>{
         menuSound.pause();
         menuSound.currentTime= 0;
         setTimeout(()=>{
+            continueBtn.classList.add("continue-active");
             openSound.play()
         },1000);
         setTimeout(()=>{
@@ -146,13 +167,14 @@ const pauseBtn = document.querySelector(".btn-pause");
 const pauseScreen = document.querySelector(".pause-screen");
 const resumeBtn = document.querySelector(".btn-resume");
 
+
 function backToMenuFunction(){
+    clearInterval(timerStart)
     openSound.play();
     wholeMenu.classList.remove("new-menu");
     upperPart.classList.remove("upper-part-active");
     lowerPart.classList.remove("lower-part-active");
     containerMenu.classList.remove("hide-menu");
-    continueBtn.classList.add("continue-active");
     setTimeout(()=>{
         menuSound.play();
         pauseScreen.classList.remove("pause-screen-active");
@@ -172,34 +194,65 @@ pauseBtn.addEventListener("click",()=>{
     pauseScreen.classList.add("pause-screen-active");
     pauseBtn.classList.add("disabled");
     pauseBtn.setAttribute("disabled", "true")
+    clearInterval(timerStart)
 });
 resumeBtn.addEventListener("click",()=>{
     pauseScreen.classList.remove("pause-screen-active");
     pauseBtn.classList.remove("disabled");
     pauseBtn.removeAttribute("disabled");
+    timerStart = setInterval(timer,1000)
+
 })
 //****************************************************************************
 const levelStartBtn = document.querySelectorAll(".level-btn");
 const cardContainer = document.querySelector(".main-cards");
-const cardList =[];
+const showLevel = document.querySelector(".show-level")
+const tryNumbers =  document.querySelector(".tries span");
+let cardList =[];
 
 //add cards accord to level difficulties
 
 levelStartBtn.forEach(el=>{
     el.addEventListener("click",(e)=>{
+        sec =0;
+        min = 0;
+        cardList = [];
+        correctTry = 0;
+        allTry = 0 ;
+        timerDisplay.textContent =`${min}:0${sec}`
         removeChildren()
         gridSystem(el.dataset.level);
         let imgArr = formRandomArray(el.dataset.level);
         makeCards(el.dataset.level);
         addRandomImg(imgArr);
-
+        showLevel.textContent= el.textContent.slice(0,-3)
         const cardClass =document.querySelectorAll(".card")
         cardClass.forEach(el=>{
             cardList.push(el)
         })
+        activateAllCardsAtFirst()
         activeCard()
     })
 })
+//active all cards for three seconds
+function activateAllCardsAtFirst (){
+    setTimeout(()=>{
+        cardList.forEach(el=>{
+            el.classList.add("card-active");
+            el.classList.add("prevent-action")
+            cardSound.play()
+        })
+    },6500)
+    setTimeout(()=>{
+        cardList.forEach(el=>{
+            el.classList.remove("card-active");
+            el.classList.remove("prevent-action")
+            cardSound.play()
+        })
+    },9000)
+}
+
+
 
 //function to add random photo to cards
 //function remove all prevous children
@@ -279,14 +332,7 @@ function addRandomImg (arr){
 }
 //**************************************************************
 //add event to cards and sounds + auto flib cards at first
-
-
 //function add active card and sound of flip
-
-
-
-
-
 function activeCard(){
     cardList.forEach((el,index)=>{
         el.addEventListener("click",(e)=>{
@@ -294,7 +340,8 @@ function activeCard(){
         })
     })
 }
-let correcttries = 0;
+let allTry = 0;
+let correctTry = 0;
 let result = {};
 function flipImages(el,index,list){
     if(Object.keys(result).length ==1){
@@ -304,9 +351,10 @@ function flipImages(el,index,list){
         if(result[Object.keys(result)[0]]==result[Object.keys(result)[1]]){
             list[parseInt(Object.keys(result)[0])].id ="active";
             list[parseInt(Object.keys(result)[1])].id ="active";
-            correcttries++
-            if(correcttries*2 == list.length){
-                correcttries = 0
+            correctTry++
+            allTry++
+            tryNumbers.textContent = allTry ;
+            if(correctTry*2 == list.length){
                 missionComplete.play()
                 setTimeout(() => {
                     backToMenuFunction()
@@ -315,6 +363,11 @@ function flipImages(el,index,list){
                     removeChildren()
                 },5000)
                 continueBtn.classList.remove("continue-active");
+                correctTry = 0;
+                allTry = 0 ;
+                sec =0;
+                min = 0 ;
+                cardList= [];
             }
             else{
                 setTimeout(()=>{
@@ -325,6 +378,8 @@ function flipImages(el,index,list){
             }
         }
         else{
+            allTry++
+            tryNumbers.textContent = allTry ;
             setTimeout(()=>{
                 list.forEach(el=>{
                     el.classList.remove("card-active")
@@ -357,3 +412,4 @@ function flipImages(el,index,list){
         })
     }
 }
+

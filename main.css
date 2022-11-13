@@ -269,7 +269,7 @@
         margin-bottom: 0;
     }
     .show-level{
-        font-size: 1.5rem;
+        font-size: 2rem;
         color: var(--purple);
         letter-spacing: 0.3rem;
     }
@@ -295,28 +295,29 @@
     }
     .main-cards-four{
         grid-template-columns: repeat(5,minmax(50px,100px));
-        grid-template-rows: repeat(4,1fr);
+        grid-template-rows: repeat(4,minmax(100px,100px));
     }
     .main-cards-six{
         grid-template-columns: repeat(6,minmax(50px,100px));
-        grid-template-rows: repeat(5,1fr);
+        grid-template-rows: repeat(5,minmax(100px,100px));
     }
     .main-cards-eight{
         grid-template-columns: repeat(8,minmax(50px,100px));
-        grid-template-rows: repeat(5,1fr);
+        grid-template-rows: repeat(5,minmax(100px,100px));
     }
-    @media (max-width:768px){
+    @media (max-width:700px){
         .main-cards{
             grid-template-columns: repeat(5,minmax(50px,100px));
         }
         .main-cards-four{
-            grid-template-rows: repeat(4,1fr);
+            grid-template-rows: repeat(4,minmax(100px,100px));
         }
         .main-cards-six{
-            grid-template-rows: repeat(6,1fr);
+            grid-template-rows: repeat(6,minmax(80px,100px));
         }
         .main-cards-eight{
-            grid-template-rows: repeat(8,1fr);
+            grid-template-rows: repeat(8,minmax(65px,100px));
+            grid-row-gap: 5px;
         }
     }
     .card{
@@ -366,6 +367,14 @@
     .face-card img{
         width: 70%;
     }
+    @media (max-width:700px){
+        .back-card img ,.face-card img{
+            width: 75%;
+        }
+        .face-card img{
+            width: 60%;
+        }
+    }
     .counter-parent,.pause-screen{
         width: 100%;
         height: 100%;
@@ -408,9 +417,10 @@
     .pause-screen .pause-screen-btns{
         background-color: var(--yellow);
         color: black;
-        font-size: 1.5rem;
+        font-size: 1.2rem;
         transition: 0.25s;
         cursor: pointer;
+        padding: 5px 10px;
     }
     .pause-screen .pause-screen-btns:hover{
         color: white;
