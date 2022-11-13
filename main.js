@@ -219,6 +219,7 @@ levelStartBtn.forEach(el=>{
         cardList = [];
         correctTry = 0;
         allTry = 0 ;
+        tryNumbers.textContent = allTry ;
         timerDisplay.textContent =`${min}:0${sec}`
         removeChildren()
         gridSystem(el.dataset.level);
