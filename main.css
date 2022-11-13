@@ -323,7 +323,7 @@
         max-height: 100px;
         position: relative;
         transform-style: preserve-3d;
-        transition: 0.4s;
+        transition: 0.3s;
         transform-origin: center right;
         border-radius: 5px;
         cursor: pointer;
@@ -336,6 +336,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        pointer-events: none;
     }
     .face-card{
         background-color: var(--purple);
@@ -348,9 +349,14 @@
     }
     .card-active{
         transform:translateX(-100%) rotateY(180deg);
+        pointer-events: none;
     }
     #active{
         transform:translateX(-100%) rotateY(180deg);
+        pointer-events: none;
+    }
+    .prevent-action{
+        pointer-events:none;
     }
     .back-card img ,.face-card img{
         display: block;

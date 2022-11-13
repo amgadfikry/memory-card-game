@@ -7,7 +7,10 @@ copyright.textContent = `Copyright © ${year} Amgad Fikry Mohamed`;
 const menuSound = document.querySelector(".menu-audio");
 const openSound = new Audio("./sound/cinderblockmove-91891.mp3");
 const countSound = new Audio("./sound/mixkit-melodic-race-countdown-1955.wav");
-const cardSound = new Audio("./sound/page-turn-100277.mp3")
+const cardSound = new Audio("./sound/flib-card.mp3")
+const correctMatch = new Audio("./sound/correct.mp3")
+const wrongMatch = new Audio("./sound/failure.mp3")
+const missionComplete = new Audio("./sound/mission-complete.mp3")
 //******************************************************************************
 //variables for open gate for game and close gate for game
 const exitGate = document.querySelector(".exit-gate");
@@ -143,25 +146,27 @@ const pauseBtn = document.querySelector(".btn-pause");
 const pauseScreen = document.querySelector(".pause-screen");
 const resumeBtn = document.querySelector(".btn-resume");
 
-backToMenuBtn.forEach(el=>{
-    el.addEventListener("click",()=>{
-        openSound.play();
-        wholeMenu.classList.remove("new-menu");
-        upperPart.classList.remove("upper-part-active");
-        lowerPart.classList.remove("lower-part-active");
-        containerMenu.classList.remove("hide-menu");
-        continueBtn.classList.add("continue-active");
-        setTimeout(()=>{
-            menuSound.play();
-            pauseScreen.classList.remove("pause-screen-active");
-        },2000);
-        pauseBtn.classList.add("disabled");
-        pauseBtn.setAttribute("disabled", "true")
-        backToMenuBtn[0].classList.add("disabled");
-        backToMenuBtn[0].setAttribute("disabled", "true")
-    })
-})
+function backToMenuFunction(){
+    openSound.play();
+    wholeMenu.classList.remove("new-menu");
+    upperPart.classList.remove("upper-part-active");
+    lowerPart.classList.remove("lower-part-active");
+    containerMenu.classList.remove("hide-menu");
+    continueBtn.classList.add("continue-active");
+    setTimeout(()=>{
+        menuSound.play();
+        pauseScreen.classList.remove("pause-screen-active");
+    },2000);
+    pauseBtn.classList.add("disabled");
+    pauseBtn.setAttribute("disabled", "true")
+    backToMenuBtn[0].classList.add("disabled");
+    backToMenuBtn[0].setAttribute("disabled", "true")
+}
 
+
+backToMenuBtn.forEach(el=>{
+    el.addEventListener("click",backToMenuFunction)
+})
 //pause game and resume it
 pauseBtn.addEventListener("click",()=>{
     pauseScreen.classList.add("pause-screen-active");
@@ -176,7 +181,7 @@ resumeBtn.addEventListener("click",()=>{
 //****************************************************************************
 const levelStartBtn = document.querySelectorAll(".level-btn");
 const cardContainer = document.querySelector(".main-cards");
-let card =[];
+const cardList =[];
 
 //add cards accord to level difficulties
 
@@ -190,22 +195,13 @@ levelStartBtn.forEach(el=>{
 
         const cardClass =document.querySelectorAll(".card")
         cardClass.forEach(el=>{
-            card.push(el)
+            cardList.push(el)
         })
         activeCard()
     })
 })
 
 //function to add random photo to cards
-function addRandomImg (arr){
-    let path = "./assets/"
-    let extension = ".png"
-    for(let i = 0 ; i < arr.length ; i++){
-        let fullPath = `${path}${arr[i]}${extension}`
-        cardContainer.children[i+2].children[1].children[0].setAttribute("src",fullPath);
-        cardContainer.children[i+2].setAttribute(`data-${arr[i]}`, arr[i])
-    }
-}
 //function remove all prevous children
 function removeChildren(){
     while (cardContainer.children.length >2) {
@@ -272,24 +268,92 @@ function formRandomArray(numberInArray){
     }
     return finalArr
 }
+function addRandomImg (arr){
+    let path = "./assets/"
+    let extension = ".png"
+    for(let i = 0 ; i < arr.length ; i++){
+        let fullPath = `${path}${arr[i]}${extension}`
+        cardContainer.children[i+2].children[1].children[0].setAttribute("src",fullPath);
+        cardContainer.children[i+2].setAttribute("data-value", arr[i])
+    }
+}
 //**************************************************************
 //add event to cards and sounds + auto flib cards at first
 
 
 //function add active card and sound of flip
-let result = [];
-function activeCard(){
-    card.forEach(el=>{
-        flipCard(el)
 
+
+
+
+
+function activeCard(){
+    cardList.forEach((el,index)=>{
+        el.addEventListener("click",(e)=>{
+            flipImages(el,index,cardList)
+        })
     })
 }
-
-function flipCard(el){
-    el.addEventListener("click",()=>{
+let correcttries = 0;
+let result = {};
+function flipImages(el,index,list){
+    if(Object.keys(result).length ==1){
         el.classList.add("card-active");
         cardSound.play()
-        result.push(el)
-        console.log(result)
-    })
+        result[index]=el.dataset.value;
+        if(result[Object.keys(result)[0]]==result[Object.keys(result)[1]]){
+            list[parseInt(Object.keys(result)[0])].id ="active";
+            list[parseInt(Object.keys(result)[1])].id ="active";
+            correcttries++
+            if(correcttries*2 == list.length){
+                correcttries = 0
+                missionComplete.play()
+                setTimeout(() => {
+                    backToMenuFunction()
+                },4000);
+                setTimeout(()=>{
+                    removeChildren()
+                },5000)
+                continueBtn.classList.remove("continue-active");
+            }
+            else{
+                setTimeout(()=>{
+                    correctMatch.play()
+                },300)
+                stopClickAll()
+                setTimeout(allowClickAll,700)
+            }
+        }
+        else{
+            setTimeout(()=>{
+                list.forEach(el=>{
+                    el.classList.remove("card-active")
+                })
+            },400)
+            setTimeout(()=>{
+                wrongMatch.play()
+            },300)
+            stopClickAll()
+            setTimeout(allowClickAll,700)
+        }
+        result={}
+    }
+    else{
+        el.classList.add("card-active");
+        cardSound.play()
+        result[index]=el.dataset.value;
+        stopClickAll()
+        setTimeout(allowClickAll,300)
+    }
+
+    function stopClickAll(){
+        list.forEach(el=>{
+            el.classList.add("prevent-action")
+        })
+    }
+    function allowClickAll(){
+        list.forEach(el=>{
+            el.classList.remove("prevent-action")
+        })
+    }
 }
